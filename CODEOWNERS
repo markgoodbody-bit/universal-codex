@@ -1,0 +1,6 @@
+# Default owner
+* @markgoodbody-bit
+
+# Sensitive paths
+/codex/* @markgoodbody-bit
+/docs/*  @markgoodbody-bit
