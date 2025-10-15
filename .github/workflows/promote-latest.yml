@@ -1,24 +1,22 @@
 name: Promote latest Codex
 on:
   release:
-    types: [published]
+    types: [published]     # run only when a release is published
 permissions:
   contents: write
+env:
+  GH_TOKEN: ${{ github.token }}   # for gh CLI auth
+
 jobs:
   promote:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}   # checkout a branch, not the tag
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name  "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-
-      - name: Promote
+      - name: Promote and archive
         shell: bash
         run: |
           set -euo pipefail
@@ -26,31 +24,29 @@ jobs:
           NEW_VER="${NEW_TAG#v}"
 
           PREV_VER=""
-          if [[ -f codex/latest/VERSION ]]; then
-            PREV_VER="$(cat codex/latest/VERSION || true)"
-          fi
+          [[ -f codex/latest/VERSION ]] && PREV_VER="$(cat codex/latest/VERSION || true)"
 
-          if [[ -n "${PREV_VER}" ]]; then
-            git mv codex/latest "codex/archive/v${PREV_VER}" || true
-          fi
-
+          [[ -n "${PREV_VER}" ]] && git mv codex/latest "codex/archive/v${PREV_VER}" || true
           rm -rf codex/latest
           mkdir -p codex/latest
           cp -a "codex/${NEW_VER}/." codex/latest/
           echo "${NEW_VER}" > codex/latest/VERSION
 
+          git config user.name  "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
           git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "Promote v${NEW_VER} ? codex/latest; archive prior v${PREV_VER}"
-            git push origin "${{ github.event.repository.default_branch }}"
-          fi
-- name: Attach stable zip
-  env:
-    GH_TOKEN: ${{ github.token }}
-  run: |
-    cd codex/latest
-    zip -r ../../UniversalCodex_latest.zip .
-    cd ../..
-    gh release upload "${{ github.event.release.tag_name }}" UniversalCodex_latest.zip --clobber
+          git diff --cached --quiet || git commit -m "Promote v${NEW_VER} → codex/latest; archive prior v${PREV_VER}"
+          git push origin "${{ github.event.repository.default_branch }}"
+
+      - name: Ensure zip tool
+        run: sudo apt-get update && sudo apt-get install -y zip
+
+      - name: Build stable zip
+        shell: bash
+        run: |
+          rm -f UniversalCodex_latest.zip
+          (cd codex/latest && zip -r ../../UniversalCodex_latest.zip .)
+
+      - name: Upload stable asset
+        run: gh release upload "${{ github.event.release.tag_name }}" UniversalCodex_latest.zip --clobber
+
