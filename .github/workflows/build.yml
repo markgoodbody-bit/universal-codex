@@ -1,41 +1,79 @@
-name: codex-ci
+name: validate-and-pack
+
 on:
-  push:
+  pull_request:
     branches: [ main ]
-    paths: [ 'codex/**', '.github/workflows/build.yml' ]
-  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  validate-and-pack:
+  ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
-        with: { python-version: '3.11' }
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
       - name: Install validators
-        run: pip install jsonschema jsonlines
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema
+
       - name: Validate SCAR seeds against schema
         run: |
           python - <<'PY'
-          import json, jsonlines, sys
-          from jsonschema import Draft7Validator
-          import pathlib
-          base = pathlib.Path('codex/1.0.4')
-          schema = json.load(open(base/'SCAR_ARCHIVE_SCHEMA_v1.0.1.json'))
-          v = Draft7Validator(schema)
-          errs = 0
-          with jsonlines.open(base/'SCAR_SEEDS_v1.0.1.jsonl') as r:
-              for i, rec in enumerate(r, 1):
-                  for e in v.iter_errors(rec):
-                      print(f'Line {i}: {e.message}')
-                      errs += 1
-          sys.exit(1 if errs else 0)
+          import glob, json, sys
+          from jsonschema import validate, ValidationError
+
+          seeds = sorted(glob.glob('codex/archive/**/SCAR_SEEDS*.json', recursive=True))
+          schemas = sorted(glob.glob('codex/archive/**/SCAR_ARCHIVE_SCHEMA_v*.json', recursive=True))
+
+          if not seeds:
+            print('No SCAR seed files under codex/archive. Skipping.')
+            sys.exit(0)
+
+          if not schemas:
+            print('No SCAR schema under codex/archive. Failing.')
+            sys.exit(1)
+
+          schema_path = schemas[-1]  # latest
+          with open(schema_path, 'r', encoding='utf-8') as f:
+            schema = json.load(f)
+
+          failed = False
+          for s in seeds:
+            try:
+              with open(s, 'r', encoding='utf-8') as f:
+                validate(instance=json.load(f), schema=schema)
+              print('OK', s)
+            except ValidationError as e:
+              print('FAIL', s, '::', e.message)
+              failed = True
+
+          sys.exit(1 if failed else 0)
           PY
-      - name: Build release zip (flat, ≤10 files)
+
+      - name: Build release zip (archive subtree)
         run: |
-          cd codex/1.0.4
-          zip -9 -j ../../UniversalCodex_1.0.4.zip *
+          mkdir -p out
+          if [ -d codex/archive ]; then
+            (cd codex && zip -r ../out/codex-archive-${GITHUB_SHA::7}.zip archive)
+          else
+            echo "No codex/archive directory. Skipping packaging."
+          fi
+
       - name: Upload artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: UniversalCodex_1.0.4.zip
-          path: UniversalCodex_1.0.4.zip
+          name: codex-archive
+          path: out/*.zip
+          if-no-files-found: ignore
+
