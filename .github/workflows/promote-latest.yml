@@ -4,6 +4,7 @@ on:
     types: [published]
 permissions:
   contents: write
+
 jobs:
   promote:
     runs-on: ubuntu-latest
@@ -12,43 +13,48 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
-      - name: Promote folder and sync root README
+
+      - name: Configure Git
+        run: |
+          git config user.name  github-actions
+          git config user.email github-actions@users.noreply.github.com
+
+      - name: Promote folder and sync README
+        shell: bash
         run: |
           set -euo pipefail
-          NEW_TAG="${{ github.event.release.tag_name }}"
-          NEW_VER="${NEW_TAG#v}"
+          TAG="${{ github.event.release.tag_name }}"
+          VER="${TAG#v}"
 
-          PREV_VER=""
-          test -f codex/latest/VERSION && PREV_VER="$(cat codex/latest/VERSION || true)"
+          # fail fast if the version dir isn't in the repo yet
+          [[ -d "codex/${VER}" ]] || { echo "codex/${VER} not found in repo"; exit 1; }
 
-          if [ -n "$PREV_VER" ]; then
-            git mv codex/latest "codex/archive/v${PREV_VER}" || true
+          PREV=""
+          [[ -f codex/latest/VERSION ]] && PREV="$(cat codex/latest/VERSION || true)"
+
+          [[ -n "${PREV}" ]] && git mv -f codex/latest "codex/archive/v${PREV}" || true
+          rm -rf codex/latest && mkdir -p codex/latest
+          rsync -a "codex/${VER}/" codex/latest/
+          echo "${VER}" > codex/latest/VERSION
+
+          # sync root README to the latest versioned README if present
+          if [[ -f "codex/latest/README_Codex_v${VER}.md" ]]; then
+            cp "codex/latest/README_Codex_v${VER}.md" README.md
           fi
 
-          rm -rf codex/latest
-          mkdir -p codex/latest
-          cp -a "codex/${NEW_VER}/." codex/latest/
-          echo "${NEW_VER}" > codex/latest/VERSION
-
-          cp "codex/latest/README_Codex_v${NEW_VER}.md" README.md
-
           git add -A
-          git diff --cached --quiet || git commit -m "Promote v${NEW_VER} -> codex/latest; sync README; archive v${PREV_VER}"
-          git push
-  attach-stable-zip:
-    needs: promote
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-      - name: Build stable zip from codex/latest
+          if ! git diff --cached --quiet; then
+            git commit -m "Promote v${VER} → codex/latest; archive v${PREV}; sync README"
+            git push origin "${{ github.event.repository.default_branch }}"
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Build and attach UniversalCodex_latest.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd codex/latest
           zip -r ../../UniversalCodex_latest.zip .
-      - name: Upload asset to the same release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: UniversalCodex_latest.zip
+          cd ../..
+          gh release upload "${{ github.event.release.tag_name }}" UniversalCodex_latest.zip --clobber
