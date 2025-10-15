@@ -2,6 +2,8 @@
 
 Single‑repo home for the Lattice work. Minimal, falsifiable, and testable.
 
+Repo wired for PRs
+
 ## Structure
 - `codex/` — canonical Codex files (one unified file preferred).
 - `docs/` — brief guides and decision logs.
