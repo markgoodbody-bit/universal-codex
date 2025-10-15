@@ -1,11 +1,11 @@
 name: Promote latest Codex
 on:
   release:
-    types: [published]     # run only when a release is published
+    types: [published]
 permissions:
   contents: write
 env:
-  GH_TOKEN: ${{ github.token }}   # for gh CLI auth
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   promote:
@@ -16,6 +16,11 @@ jobs:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
 
+      - name: Configure Git
+        run: |
+          git config user.name  "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+
       - name: Promote and archive
         shell: bash
         run: |
@@ -25,28 +30,31 @@ jobs:
 
           PREV_VER=""
           [[ -f codex/latest/VERSION ]] && PREV_VER="$(cat codex/latest/VERSION || true)"
-
           [[ -n "${PREV_VER}" ]] && git mv codex/latest "codex/archive/v${PREV_VER}" || true
+
           rm -rf codex/latest
           mkdir -p codex/latest
           cp -a "codex/${NEW_VER}/." codex/latest/
           echo "${NEW_VER}" > codex/latest/VERSION
 
-          git config user.name  "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git diff --cached --quiet || git commit -m "Promote v${NEW_VER} → codex/latest; archive prior v${PREV_VER}"
+          git push origin "${{ github.event.repository.default_branch }}"
+
+      - name: Update root README to latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp codex/latest/README_Codex_v*.md README.md
+          git add README.md
+          git diff --cached --quiet || git commit -m "README: sync to latest"
           git push origin "${{ github.event.repository.default_branch }}"
 
       - name: Ensure zip tool
         run: sudo apt-get update && sudo apt-get install -y zip
 
-      - name: Build stable zip
-        shell: bash
-        run: |
-          rm -f UniversalCodex_latest.zip
-          (cd codex/latest && zip -r ../../UniversalCodex_latest.zip .)
+      - name: Build stable zip from codex/latest
+        run: (cd codex/latest && zip -r ../../UniversalCodex_latest.zip .)
 
-      - name: Upload stable asset
+      - name: Upload stable asset to this release
         run: gh release upload "${{ github.event.release.tag_name }}" UniversalCodex_latest.zip --clobber
-
