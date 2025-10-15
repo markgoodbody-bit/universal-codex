@@ -1,0 +1,20 @@
+name: validate-checksums
+on:
+  pull_request:
+    paths:
+      - 'codex/**'
+      - '.github/workflows/validate-checksums.yml'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify LF line endings
+        run: |
+          ! file $(git ls-files 'codex/**/*.md' 'codex/**/*.json') | grep -q CRLF
+      - name: Regenerate checksums
+        run: |
+          python3 scripts/canonical_sha256.py codex/v1.0.16 > codex/v1.0.16/UniversalCodex_1.0.16_CHECKSUMS.txt
+      - name: Ensure CHECKSUMS is committed and stable
+        run: |
+          git diff --exit-code codex/v1.0.16/UniversalCodex_1.0.16_CHECKSUMS.txt
