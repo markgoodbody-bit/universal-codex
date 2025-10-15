@@ -3,18 +3,46 @@ on:
   pull_request:
     paths:
       - 'codex/**'
+      - 'scripts/**'
       - '.github/workflows/validate-checksums.yml'
+
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Verify LF line endings
         run: |
-          ! file $(git ls-files 'codex/**/*.md' 'codex/**/*.json') | grep -q CRLF
+          ! file $(git ls-files 'codex/**/*.md' 'codex/**/*.json' 'codex/**/*.jsonl') | grep -q CRLF
+
       - name: Regenerate checksums
         run: |
-          python3 scripts/canonical_sha256.py codex/v1.0.16 > codex/v1.0.16/UniversalCodex_1.0.16_CHECKSUMS.txt
-      - name: Ensure CHECKSUMS is committed and stable
+          python3 scripts/canonical_sha256.py codex/v1.0.16 > /tmp/checksums_computed.txt
+
+      - name: Ensure CHECKSUMS committed and stable
         run: |
-          git diff --exit-code codex/v1.0.16/UniversalCodex_1.0.16_CHECKSUMS.txt
+          diff -u codex/v1.0.16/UniversalCodex_1.0.16_CHECKSUMS.txt /tmp/checksums_computed.txt
+
+      - name: Validate SCAR schema compliance
+        run: |
+          pip install jsonschema
+          python3 - <<'PY'
+          import json, sys
+          from jsonschema import validate, ValidationError
+          schema = json.load(open('codex/v1.0.16/SCAR_ARCHIVE_SCHEMA_v1.0.4.json'))
+          with open('codex/v1.0.16/SCAR_LOG_v1.0.16.jsonl') as f:
+              for i, line in enumerate(f, 1):
+                  try:
+                      scar = json.loads(line)
+                      validate(instance=scar, schema=schema)
+                      print(f"Line {i} ({scar['id']}): VALID")
+                  except ValidationError as e:
+                      print(f"Line {i}: INVALID - {e.message}")
+                      sys.exit(1)
+          PY
+
+      - name: Validate SCAR signatures (Tier2 warns only)
+        run: |
+          python3 scripts/validate_scar_signatures.py             --log codex/v1.0.16/SCAR_LOG_v1.0.16.jsonl             --warn-only-tier2             --grace-period 7
+        continue-on-error: true
