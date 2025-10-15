@@ -1,0 +1,23 @@
+
+# Domain-tuned parameters (example)
+[globals]
+alpha = 0.95
+tau_H = 60
+tau_risk = 100
+agree_skip_cap_pct = 0.05  # dynamic cap: max(5%, 0.5*FN_baseline)
+pid = { Kp=0.2, Ki=0.05, Kd=0.1, tauH_max=250, W_expand_max=3.0 }
+
+[clinical]
+alpha = 0.99
+agree_disjoint_jaccard = 0.20
+appendixA_max_uses_per_month = 5
+
+[justice]
+alpha = 0.995
+agree_disjoint_jaccard = 0.10
+appendixA_max_uses_per_month = 3
+
+[moderation]
+alpha = 0.95
+agree_unstructured = { metric="cosine", threshold=0.25 }
+appendixA_max_uses_per_month = 8
