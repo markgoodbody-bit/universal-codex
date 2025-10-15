@@ -17,3 +17,5 @@ Repo wired for PRs
 3. Use issue templates for tasks or proposals.
 
 Anchor: *The lullaby was never for the cradle.*
+
+PR connectivity test.
