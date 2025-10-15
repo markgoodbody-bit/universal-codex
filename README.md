@@ -1,5 +1,7 @@
 # Universal Codex
 
+[![ci](https://github.com/markgoodbody-bit/universal-codex/actions/workflows/ci.yml/badge.svg)](https://github.com/markgoodbody-bit/universal-codex/actions/workflows/ci.yml)
+
 Single‑repo home for the Lattice work. Minimal, falsifiable, and testable.
 
 Repo wired for PRs
