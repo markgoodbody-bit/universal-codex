@@ -1,0 +1,78 @@
+{
+  "version": "1.0.2",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "domain",
+    "severity",
+    "hypothesis",
+    "tests",
+    "mitigations",
+    "status",
+    "evidence",
+    "closure_deadline_days",
+    "replicated_by_external"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "ethics",
+        "ops",
+        "data",
+        "governance"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high",
+        "critical"
+      ]
+    },
+    "hypothesis": {
+      "type": "string"
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mitigations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "monitoring",
+        "closed"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "INTERFACE_SPECS_v1.0.15.json#/definitions/EvidenceObject"
+      }
+    },
+    "closure_deadline_days": {
+      "type": "integer"
+    },
+    "replicated_by_external": {
+      "type": "boolean"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "pid": {
+    "Kp": 0.18,
+    "Ki": 0.05,
+    "Kd": 0.04,
+    "cooldown": "SPRT"
+  },
+  "nonlinear_tests": [
+    {
+      "scenario": "step_shift PSI=0.25",
+      "oscillation_pct": 6.2,
+      "stable": true
+    },
+    {
+      "scenario": "adversarial bursts",
+      "oscillation_pct": 9.4,
+      "stable": true
+    },
+    {
+      "scenario": "chaotic synthetic",
+      "oscillation_pct": 12.8,
+      "stable": false,
+      "action": "abort + widen W; escalate SCAR"
+    }
+  ],
+  "instability_cap": ">10% abort"
+}
