@@ -1,0 +1,23 @@
+{"type":"meta","schema":"uc.memory.v1","notes":"append-only; UTF-8; one JSON object per line; newest last","links":{"semver":"https://semver.org","jsonl":"https://jsonlines.readthedocs.io"}}
+
+{"ts":"2025-10-14","actor":"mark","event":"repo_init","summary":"Created public repo for Universal Codex; goal: one zip ≤10 files, ASCII-canonical, model-agnostic.","refs":["repo: markgoodbody-bit/universal-codex"]}
+
+{"ts":"2025-10-14","actor":"assistant","event":"release","version":"1.0.4","summary":"First broadly coherent Codex; smoke tests A–D; governance/benchmarks/scar schema seeded.","deltas":["Smoke tests defined","Public metrics listed","JSON schema for SCARs"]}
+
+{"ts":"2025-10-14","actor":"grok","event":"external_review","target_version":"1.0.4","summary":"Validated smoke tests; flagged ambiguities (invariants semantics, AGREE disjointness, DRIFT sizing).","actions":["Open issues to harden invariants/AGREE/DRIFT"]}
+
+{"ts":"2025-10-14","actor":"assistant","event":"release","version":"1.0.5-RFC","summary":"Operationalized invariants; numeric AGREE/DRIFT proposed; marked as RFC (not spine-locked).","deltas":["Invariant rubrics","AGREE disjointness metric (draft)","DRIFT adjustments (draft)"]}
+
+{"ts":"2025-10-14","actor":"claude","event":"external_review","target_version":"1.0.5-RFC","summary":"Refused to ‘bless’ hard numbers; recommended RFC framing, tuning guide, audit checklist, success criteria.","actions":["Added RFC companion + tuning/audit docs"]}
+
+{"ts":"2025-10-14","actor":"assistant","event":"release","version":"1.0.6-RFC2","summary":"Moved numbers to domain configs; added PID-based DRIFT control; evidence bar + drills; escalation ladders.","deltas":["domain_config/*.toml","PID DRIFT","AGREE_SKIPPED escalation","quarterly breach drills"]}
+
+{"ts":"2025-10-15","actor":"assistant","event":"release","version":"1.0.7-RFC3","summary":"Interface specs + canonical hashing; synthetic baselines; SCAR closure SLA.","deltas":["JSON IDL (ActionProposal/DecisionReport)","payload SHA256 protocol","SCAR closure ≤90d"]}
+
+{"ts":"2025-10-15","actor":"assistant","event":"release","version":"1.0.8-RFC4","summary":"Unstructured AGREE adapter (embeddings); CDI histograms; tightened governance π(90d)≤15%.","deltas":["AGREE_unstructured adapter","CDI publication","π cap tightened"]}
+
+{"ts":"2025-10-15","actor":"assistant","event":"release","version":"1.0.9-RFC5","summary":"Config-entropy (KL) + event-driven pentests; MAUT weight bounds (±10% median); multi-agent adapter deadline set.","deltas":["KL divergence monitoring","post-config pentests","multi-agent/graph adapter by 2026-06-30"]}
+
+{"ts":"2025-10-15","actor":"mark","event":"field_test","summary":"Delivered Codex to external AIs (Grok, Gemini, Copilot; Claude later). Feedback integrated into RFC2–RFC5.","notes":"Andy’s AI ran A–D, proposed specific hardenings; incorporated selectively."}
+
+{"ts":"2025-10-15","actor":"assistant","event":"policy","summary":"Adopt `MEMORY_LOG.jsonl` as the single append-only memory for cross-tab continuity; future AIs must read & extend.","rules":["Do not edit prior lines","Append newest last","Use ISO date","Keep summaries ≤30 words","Reference versions/refs clearly"]}
