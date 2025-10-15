@@ -46,3 +46,11 @@ jobs:
             git commit -m "Promote v${NEW_VER} ? codex/latest; archive prior v${PREV_VER}"
             git push origin "${{ github.event.repository.default_branch }}"
           fi
+- name: Attach stable zip
+  env:
+    GH_TOKEN: ${{ github.token }}
+  run: |
+    cd codex/latest
+    zip -r ../../UniversalCodex_latest.zip .
+    cd ../..
+    gh release upload "${{ github.event.release.tag_name }}" UniversalCodex_latest.zip --clobber
