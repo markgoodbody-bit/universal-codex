@@ -10,7 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.repository.default_branch }}   # checkout a branch, not the tag
           fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name  "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+
       - name: Promote
         shell: bash
         run: |
@@ -18,8 +25,12 @@ jobs:
           NEW_TAG="${{ github.event.release.tag_name }}"
           NEW_VER="${NEW_TAG#v}"
 
+          PREV_VER=""
           if [[ -f codex/latest/VERSION ]]; then
-            PREV_VER="$(cat codex/latest/VERSION)"
+            PREV_VER="$(cat codex/latest/VERSION || true)"
+          fi
+
+          if [[ -n "${PREV_VER}" ]]; then
             git mv codex/latest "codex/archive/v${PREV_VER}" || true
           fi
 
@@ -28,8 +39,10 @@ jobs:
           cp -a "codex/${NEW_VER}/." codex/latest/
           echo "${NEW_VER}" > codex/latest/VERSION
 
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
           git add -A
-          git commit -m "Promote v${NEW_VER} ? codex/latest; archive prior"
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Promote v${NEW_VER} ? codex/latest; archive prior v${PREV_VER}"
+            git push origin "${{ github.event.repository.default_branch }}"
+          fi
