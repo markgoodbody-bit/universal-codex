@@ -1,0 +1,41 @@
+name: codex-ci
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'codex/**', '.github/workflows/build.yml' ]
+  workflow_dispatch:
+jobs:
+  validate-and-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install validators
+        run: pip install jsonschema jsonlines
+      - name: Validate SCAR seeds against schema
+        run: |
+          python - <<'PY'
+          import json, jsonlines, sys
+          from jsonschema import Draft7Validator
+          import pathlib
+          base = pathlib.Path('codex/1.0.4')
+          schema = json.load(open(base/'SCAR_ARCHIVE_SCHEMA_v1.0.1.json'))
+          v = Draft7Validator(schema)
+          errs = 0
+          with jsonlines.open(base/'SCAR_SEEDS_v1.0.1.jsonl') as r:
+              for i, rec in enumerate(r, 1):
+                  for e in v.iter_errors(rec):
+                      print(f'Line {i}: {e.message}')
+                      errs += 1
+          sys.exit(1 if errs else 0)
+          PY
+      - name: Build release zip (flat, ≤10 files)
+        run: |
+          cd codex/1.0.4
+          zip -9 -j ../../UniversalCodex_1.0.4.zip *
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UniversalCodex_1.0.4.zip
+          path: UniversalCodex_1.0.4.zip
