@@ -1,169 +1,141 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://universal-codex/contracts/EvalLogContract_v1.1.1.schema.json",
-  "title": "EvalLogContract_v1.1.1",
+  "$id": "https://universal-codex.org/schemas/EvalLogContract_v1.1.1.schema.json",
   "type": "object",
-  "additionalProperties": false,
   "properties": {
-    "run_id": {
+    "log_id": {
       "type": "string"
     },
-    "timestamp_utc": {
+    "timestamp": {
       "type": "string",
       "format": "date-time"
     },
-    "operator_id": {
-      "type": "string"
-    },
-    "codex_version": {
-      "type": "string"
-    },
     "inputs": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "domain": {
-          "type": "string",
-          "enum": [
-            "clinical",
-            "justice",
-            "moderation",
-            "av",
-            "other"
-          ]
+        "model_id": {
+          "type": "string"
         },
-        "context_sha256": {
-          "type": "string",
-          "pattern": "^[a-f0-9]{64}$"
+        "prompt_template_id": {
+          "type": "string"
         },
-        "input_sha256": {
-          "type": "string",
-          "pattern": "^[a-f0-9]{64}$"
+        "test_suite_version": {
+          "type": "string"
+        },
+        "test_case_id": {
+          "type": "string"
         }
       },
       "required": [
-        "domain",
-        "context_sha256",
-        "input_sha256"
-      ]
+        "model_id",
+        "prompt_template_id",
+        "test_suite_version",
+        "test_case_id"
+      ],
+      "additionalProperties": false
     },
     "kernel_invariants": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "CONSENT": {
+        "no_hallucinations": {
           "type": "boolean"
         },
-        "DIGNITY": {
-          "type": "boolean"
-        },
-        "PERSONHOOD": {
-          "type": "boolean"
-        },
-        "NON_INSTRUMENT": {
+        "content_policy_compliant": {
           "type": "boolean"
         }
       },
       "required": [
-        "CONSENT",
-        "DIGNITY",
-        "PERSONHOOD",
-        "NON_INSTRUMENT"
-      ]
+        "no_hallucinations",
+        "content_policy_compliant"
+      ],
+      "additionalProperties": false
     },
     "quant": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "cvar_95": {
+        "accuracy": {
           "type": "number"
         },
-        "maut_score": {
-          "type": "number"
+        "latency_ms": {
+          "type": "integer"
         }
-      }
+      },
+      "required": [
+        "accuracy",
+        "latency_ms"
+      ],
+      "additionalProperties": false
     },
     "agree": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "pair_kappa": {
-          "type": "number"
-        },
-        "passed": {
+        "gold_standard_match": {
           "type": "boolean"
         }
-      }
+      },
+      "required": [
+        "gold_standard_match"
+      ],
+      "additionalProperties": false
     },
     "drift": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "psi": {
-          "type": "number"
-        },
-        "page_hinkley_alarm": {
-          "type": "boolean"
-        },
         "mmd_p": {
           "type": "number"
         },
         "subspace_angle_deg": {
           "type": "number"
         }
-      }
+      },
+      "required": [
+        "mmd_p"
+      ],
+      "additionalProperties": false
     },
     "decision": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "action": {
-          "type": "string",
-          "enum": [
-            "PERMIT",
-            "ABSTAIN",
-            "BLOCK"
-          ]
+        "is_acceptable": {
+          "type": "boolean"
         },
-        "confidence": {
-          "type": "number"
+        "reasoning_id": {
+          "type": "string"
         }
       },
       "required": [
-        "action",
-        "confidence"
-      ]
+        "is_acceptable",
+        "reasoning_id"
+      ],
+      "additionalProperties": false
     },
     "publish": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
-        "artifact_sha256": {
-          "type": "string",
-          "pattern": "^[a-f0-9]{64}$"
+        "is_published": {
+          "type": "boolean"
         },
-        "scar_link": {
+        "artifact_url": {
           "type": "string",
           "format": "uri"
-        },
-        "telemetry_week": {
-          "type": "integer"
         }
       },
       "required": [
-        "artifact_sha256",
-        "scar_link"
-      ]
+        "is_published"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
-    "run_id",
-    "timestamp_utc",
-    "operator_id",
-    "codex_version",
+    "log_id",
+    "timestamp",
     "inputs",
     "kernel_invariants",
+    "quant",
+    "agree",
+    "drift",
     "decision",
     "publish"
-  ]
+  ],
+  "additionalProperties": false
 }
