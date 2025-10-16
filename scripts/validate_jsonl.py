@@ -1,17 +1,24 @@
-﻿import sys, json
-from jsonschema import validate, ValidationError
-log_path, schema_path = sys.argv[1], sys.argv[2]
-schema = json.load(open(schema_path, "r", encoding="utf-8"))
-ok = True
-for i, line in enumerate(open(log_path, "r", encoding="utf-8"), 1):
-    line = line.strip()
-    if not line: 
-        continue
-    try:
-        obj = json.loads(line)
-        validate(obj, schema)
-    except Exception as e:
-        print(f"Line {i}: {e}")
-        ok = False
-if not ok:
-    sys.exit(1)
+﻿import json, argparse
+from jsonschema import validate
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--schema", required=True)
+    ap.add_argument("--file",   required=True)
+    args = ap.parse_args()
+
+    with open(args.schema, "r", encoding="utf-8") as f:
+        schema = json.load(f)
+
+    ok = True
+    with open(args.file, "r", encoding="utf-8") as f:
+        for i, line in enumerate(f, 1):
+            s = line.strip()
+            if not s: 
+                continue
+            try:
+                validate(json.loads(s), schema)
+            except Exception as e:
+                print(f"Line {i}: {e}")
+                ok = False
+    raise SystemExit(0 if ok else 1)
