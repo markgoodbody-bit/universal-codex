@@ -1,0 +1,14 @@
+{
+  "domain": "clinical",
+  "adapter": "unstructured_embedding_cosine",
+  "threshold": 0.22,
+  "roc": {
+    "auc": 0.91,
+    "operating_point": {
+      "tpr": 0.88,
+      "fpr": 0.09
+    }
+  },
+  "false_comfort_rate": 0.031,
+  "calibration_method": "hold-out incidents + simulated agreement attacks; publish miss curves"
+}
