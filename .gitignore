@@ -1,11 +1,4 @@
-UniversalCodex_*.zip
-_uc16/
-_uc16sig/
-_uc16*/
 build/
-*.zip
-_uc16/
-_uc16sig/
-_uc16*/
-build/
-*.zip
+data/
+logs/
+*.npy
