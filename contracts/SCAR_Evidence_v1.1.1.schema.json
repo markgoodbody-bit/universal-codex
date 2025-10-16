@@ -1,266 +1,175 @@
 {
-<<<<<<< HEAD
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "title":"SCAR_Evidence_v1.1.1",
-  "type":"object",
-  "oneOf":[
-    {
-      "title":"InternalEvidence",
-      "required":["type","description","filename","sha256"],
-      "properties":{
-        "type":{"const":"internal"},
-        "description":{"type":"string"},
-        "filename":{"type":"string"},
-        "sha256":{"type":"string","pattern":"^[A-Fa-f0-9]{64}$"}
-      },
-      "additionalProperties":false
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://universal-codex/contracts/SCAR_Evidence_v1.1.1.schema.json",
+  "title": "SCAR_Evidence_v1.1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "scar_id": {
+      "type": "string"
     },
-    {
-      "title":"ExternalAttestation",
-      "required":[
-        "type","replication_type","attestor_id","attestor_pubkey_fingerprint",
-        "vc_jwt","vc_claims","ct_proofs"
-      ],
-      "properties":{
-        "type":{"const":"external"},
-        "replication_type":{"enum":["standard","adversarial"]},
-        "attestor_id":{"type":"string","format":"hostname"},
-        "attestor_pubkey_fingerprint":{"type":"string","pattern":"^[A-Fa-f0-9]{40}$"},
-        "vc_jwt":{"type":"string"},               // compact JWS
-        "vc_claims":{
-          "type":"object",
-          "required":["jti","nbf","exp","credentialStatus","iss","sub","iat"],
-          "properties":{
-            "jti":{"type":"string"},
-            "nbf":{"type":"integer"},
-            "exp":{"type":"integer"},
-            "iat":{"type":"integer"},
-            "iss":{"type":"string"},
-            "sub":{"type":"string"},
-            "credentialStatus":{
-              "type":"object",
-              "required":["type","id","statusListIndex","statusListCredential"],
-              "properties":{
-                "type":{"const":"StatusList2021Entry"},
-                "id":{"type":"string","format":"uri"},
-                "statusListIndex":{"type":"string","pattern":"^[0-9]+$"},
-                "statusListCredential":{"type":"string","format":"uri"}
-              },
-              "additionalProperties":false
-            }
-          },
-          "additionalProperties":false
-        },
-        "ct_proofs":{
-          "type":"array","minItems":2,"uniqueItems":true,
-          "items":{
-            "type":"object",
-            "required":["log_url","log_id","sct_b64","inclusion_path_b64"],
-            "properties":{
-              "log_url":{"type":"string","format":"uri"},
-              "log_id":{"type":"string"},
-              "sct_b64":{"type":"string"},
-              "inclusion_path_b64":{"type":"string"}
-            },
-            "additionalProperties":false
-          }
-        }
-      },
-      "additionalProperties":false
-=======
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.org/contracts/SCAR_Evidence_v1.1.1.schema.json",
-  "title": "SCAR Evidence Item v1.1.1",
-  "oneOf": [
-    {
-      "title": "InternalEvidence",
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "description",
-        "filename",
-        "sha256"
-      ],
-      "properties": {
-        "type": {
-          "const": "InternalEvidence"
-        },
-        "description": {
-          "type": "string"
-        },
-        "filename": {
-          "type": "string"
-        },
-        "sha256": {
-          "type": "string",
-          "pattern": "^[A-Fa-f0-9]{64}$"
-        }
-      }
-    },
-    {
-      "title": "ExternalAttestation",
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "description",
-        "replication_type",
-        "attestor_id",
-        "attestor_pubkey_fingerprint",
-        "attestation_timestamp",
-        "report_sha256",
-        "signature",
-        "vc_jwt",
-        "vc_claims",
-        "ct_proofs"
-      ],
-      "properties": {
-        "type": {
-          "const": "ExternalAttestation"
-        },
-        "description": {
-          "type": "string"
-        },
-        "replication_type": {
-          "type": "string",
-          "enum": [
-            "standard",
-            "adversarial"
-          ]
-        },
-        "attestor_id": {
-          "type": "string",
-          "format": "hostname"
-        },
-        "attestor_pubkey_fingerprint": {
-          "type": "string",
-          "pattern": "^[A-Fa-f0-9]{40}$"
-        },
-        "attestation_timestamp": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "report_sha256": {
-          "type": "string",
-          "pattern": "^[A-Fa-f0-9]{64}$"
-        },
-        "signature": {
-          "type": "string",
-          "minLength": 32
-        },
-        "vc_jwt": {
-          "type": "string",
-          "minLength": 64
-        },
-        "vc_claims": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "jti",
-            "nbf",
-            "exp",
-            "credentialSubject",
-            "issuer",
-            "credentialStatus"
-          ],
-          "properties": {
-            "jti": {
-              "type": "string",
-              "minLength": 8
-            },
-            "nbf": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "exp": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "issuer": {
-              "type": "string"
-            },
-            "credentialSubject": {
-              "type": "object"
-            },
-            "credentialStatus": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "id",
-                "type",
-                "statusPurpose",
-                "statusListIndex",
-                "statusListCredential"
-              ],
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "StatusList2021Entry"
-                  ]
-                },
-                "statusPurpose": {
-                  "type": "string",
-                  "enum": [
-                    "revocation",
-                    "suspension"
-                  ]
-                },
-                "statusListIndex": {
-                  "type": "string",
-                  "pattern": "^[0-9]+$"
-                },
-                "statusListCredential": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            }
-          }
-        },
-        "ct_proofs": {
-          "type": "array",
-          "minItems": 2,
-          "items": {
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "title": "InternalEvidence",
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "log_url",
-              "log_id",
-              "sct_b64",
-              "inclusion_path_b64"
-            ],
             "properties": {
-              "log_url": {
-                "type": "string",
-                "format": "uri"
+              "kind": {
+                "const": "internal"
               },
-              "log_id": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9+/=]+$"
+              "description": {
+                "type": "string"
               },
-              "sct_b64": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9+/=]+$"
+              "filename": {
+                "type": "string"
               },
-              "inclusion_path_b64": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "kind",
+              "description",
+              "filename",
+              "sha256"
+            ]
+          },
+          {
+            "title": "ExternalAttestation",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "const": "external"
+              },
+              "replication_type": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "adversarial"
+                ]
+              },
+              "attestor_id": {
+                "type": "string",
+                "format": "hostname"
+              },
+              "attestor_pubkey_fingerprint": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "vc_jwt": {
+                "type": "string"
+              },
+              "vc_claims": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "jti": {
+                    "type": "string"
+                  },
+                  "nbf": {
+                    "type": "number"
+                  },
+                  "exp": {
+                    "type": "number"
+                  },
+                  "credentialStatus": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "StatusList2021Entry"
+                      },
+                      "statusListIndex": {
+                        "type": "string",
+                        "pattern": "^[0-9]+$"
+                      },
+                      "statusListCredential": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "statusPurpose": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "statusListIndex",
+                      "statusListCredential",
+                      "statusPurpose"
+                    ]
+                  }
+                },
+                "required": [
+                  "jti",
+                  "nbf",
+                  "exp",
+                  "credentialStatus"
+                ]
+              },
+              "ct_proofs": {
                 "type": "array",
-                "minItems": 1,
+                "minItems": 2,
                 "items": {
-                  "type": "string",
-                  "pattern": "^[A-Za-z0-9+/=]+$"
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "log_url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "log_id": {
+                      "type": "string"
+                    },
+                    "sct_b64": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9+/=]+$"
+                    },
+                    "inclusion_path_b64": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9+/=]+$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "log_url",
+                    "log_id",
+                    "sct_b64",
+                    "inclusion_path_b64"
+                  ]
                 }
               }
-            }
+            },
+            "required": [
+              "kind",
+              "replication_type",
+              "attestor_id",
+              "attestor_pubkey_fingerprint",
+              "vc_jwt",
+              "vc_claims",
+              "ct_proofs"
+            ]
           }
-        }
+        ]
       }
->>>>>>> 06d9119 (feat(v1.1.1): harden eval/evidence contracts + add eval harnesses)
     }
+  },
+  "required": [
+    "scar_id",
+    "evidence"
   ]
 }
