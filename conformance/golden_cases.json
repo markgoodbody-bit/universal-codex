@@ -105,6 +105,26 @@
 
                                                   },
                              "scenario":  "Strict baseline header: object-weights overlay only (K_TECH)"
+                         },
+                         {
+                             "case_id":  "GOLD-012",
+                             "header":  {
+                                            "overlays":  [
+                                                             "K_TECH"
+                                                         ],
+                                            "harm_weights":  [
+                                                                 0.8,
+                                                                 0.3
+                                                             ],
+                                            "HARM_ONTOLOGY":  [
+                                                                  "people",
+                                                                  "process"
+                                                              ]
+                                        },
+                             "expected_outputs":  {
+
+                                                  },
+                             "scenario":  "Strict demo: harm_weights sum != 1 should fail"
                          }
                      ]
 }
