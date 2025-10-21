@@ -1,74 +1,110 @@
-{
-  "golden_cases": [
-    {
-      "case_id": "GOLD-001",
-      "scenario": "consent-door",
-      "expected_outputs": {
-        "Delta_Phi_K_min": 0.1
-      }
-    },
-    {
-      "case_id": "GOLD-002",
-      "scenario": "overload-repair",
-      "expected_outputs": {
-        "Delta_Phi_K_min": 0.2
-      }
-    },
-    {
-      "case_id": "GOLD-003",
-      "scenario": "high-harm-safety",
-      "expected_outputs": {
-        "P7_triggered": true
-      }
-    },
-    {
-      "case_id": "GOLD-004",
-      "scenario": "P7-monotonicity",
-      "expected_outputs": {
-        "silent_blocked_above": 0.7
-      }
-    },
-    {
-      "case_id": "GOLD-005",
-      "scenario": "collab-contrast",
-      "expected_outputs": {
-        "P14_contrast": true
-      }
-    },
-    {
-      "case_id": "GOLD-006",
-      "scenario": "risky-consent-gate",
-      "expected_outputs": {
-        "P13_required": true
-      }
-    },
-    {
-      "case_id": "GOLD-007",
-      "scenario": "fairness-cap",
-      "expected_outputs": {
-        "cap": 0.4
-      }
-    },
-    {
-      "case_id": "GOLD-008",
-      "scenario": "overload-throttle",
-      "expected_outputs": {
-        "cap": 0.75
-      }
-    },
-    {
-      "case_id": "GOLD-009",
-      "scenario": "provenance-signed",
-      "expected_outputs": {
-        "dual_sig": true
-      }
-    },
-    {
-      "case_id": "GOLD-010",
-      "scenario": "k5-kindness",
-      "expected_outputs": {
-        "fires_when": "SCAR-K>=3 or W_mean<0.60"
-      }
-    }
-  ]
+﻿{
+    "golden_cases":  [
+                         {
+                             "case_id":  "GOLD-001",
+                             "scenario":  "consent-door",
+                             "expected_outputs":  {
+                                                      "Delta_Phi_K_min":  0.1
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-002",
+                             "scenario":  "overload-repair",
+                             "expected_outputs":  {
+                                                      "Delta_Phi_K_min":  0.2
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-003",
+                             "scenario":  "high-harm-safety",
+                             "expected_outputs":  {
+                                                      "P7_triggered":  true
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-004",
+                             "scenario":  "P7-monotonicity",
+                             "expected_outputs":  {
+                                                      "silent_blocked_above":  0.7
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-005",
+                             "scenario":  "collab-contrast",
+                             "expected_outputs":  {
+                                                      "P14_contrast":  true
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-006",
+                             "scenario":  "risky-consent-gate",
+                             "expected_outputs":  {
+                                                      "P13_required":  true
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-007",
+                             "scenario":  "fairness-cap",
+                             "expected_outputs":  {
+                                                      "cap":  0.4
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-008",
+                             "scenario":  "overload-throttle",
+                             "expected_outputs":  {
+                                                      "cap":  0.75
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-009",
+                             "scenario":  "provenance-signed",
+                             "expected_outputs":  {
+                                                      "dual_sig":  true
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-010",
+                             "scenario":  "k5-kindness",
+                             "expected_outputs":  {
+                                                      "fires_when":  "SCAR-K\u003e=3 or W_mean\u003c0.60"
+                                                  }
+                         },
+                         {
+                             "case_id":  "GOLD-011",
+                             "header":  {
+                                            "P17_v2_dual_signature":  {
+                                                                          "required_signatures":  [
+                                                                                                      "coordinator_sig",
+                                                                                                      "agent_sig"
+                                                                                                  ]
+                                                                      },
+                                            "harm_weights":  [
+                                                                 0.7,
+                                                                 0.15,
+                                                                 0.1,
+                                                                 0.05
+                                                             ],
+                                            "overlays":  [
+                                                             "K_TECH"
+                                                         ],
+                                            "P15_v3_grouped_fairness":  {
+                                                                            "group_cap":  0.5
+                                                                        },
+                                            "P7_GUARD":  {
+                                                             "people_harm_threshold":  0.7
+                                                         },
+                                            "HARM_ONTOLOGY":  [
+                                                                  "people",
+                                                                  "process",
+                                                                  "model",
+                                                                  "other"
+                                                              ]
+                                        },
+                             "expected_outputs":  {
+
+                                                  },
+                             "scenario":  "Strict baseline header: object-weights overlay only (K_TECH)"
+                         }
+                     ]
 }
