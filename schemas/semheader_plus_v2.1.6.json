@@ -1,0 +1,71 @@
+{
+  "$id": "https://universalcodex.org/schemas/semheader.plus.v2.1.6.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SEMANTIC_HEADER++ v2.1.6",
+  "type": "object",
+  "required": [
+    "HARM_ONTOLOGY",
+    "harm_weights",
+    "P7_GUARD"
+  ],
+  "properties": {
+    "HARM_ONTOLOGY": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "people",
+          "process",
+          "legal",
+          "reputation"
+        ]
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "harm_weights": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "P7_GUARD": {
+      "type": "object",
+      "properties": {
+        "people_harm_threshold": {
+          "type": "number",
+          "default": 0.7
+        }
+      },
+      "required": [
+        "people_harm_threshold"
+      ]
+    },
+    "P15_v3_grouped_fairness": {
+      "type": "object",
+      "properties": {
+        "cold_start_joint_cap": {
+          "type": "number"
+        },
+        "group_cap": {
+          "type": "number"
+        }
+      }
+    },
+    "P17_v2_dual_signature": {
+      "type": "object",
+      "properties": {
+        "required_signatures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nonce_chain": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

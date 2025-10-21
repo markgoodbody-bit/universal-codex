@@ -1,0 +1,17 @@
+{
+  "id": "KND-K",
+  "weights": {
+    "care": 0.4,
+    "clarity": 0.25,
+    "consent": 0.2,
+    "agency": 0.15
+  },
+  "guards": [
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12"
+  ],
+  "pledge": "Pick utterance maximizing \u0394\u03a6_K while honoring guards."
+}
