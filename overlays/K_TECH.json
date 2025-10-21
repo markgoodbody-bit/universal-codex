@@ -1,0 +1,19 @@
+{
+  "id": "K_TECH",
+  "inherits": "KND-K",
+  "tech_signals": {
+    "cognitive_load": "0..1",
+    "risk_level": "0..1",
+    "granularity": [
+      "overview",
+      "focused",
+      "deep"
+    ]
+  },
+  "guards": [
+    "P7",
+    "P9",
+    "P10",
+    "P11"
+  ]
+}

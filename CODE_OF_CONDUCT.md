@@ -1,3 +1,4 @@
 # Code of Conduct
 
-Be concise, respectful, and evidence‑driven. No personal attacks. Cite sources when making strong claims.
+We follow the Contributor Covenant. Be respectful. Assume good faith. No harassment.
+For incidents, use GitHub's report tools or private email listed in `SECURITY.md`.

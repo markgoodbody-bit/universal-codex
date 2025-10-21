@@ -1,22 +1,16 @@
-name: Contract Validation CI
+name: CI
+
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
-  validate_schemas:
+  validate:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: pip install jsonschema
-    - name: Validate Eval Logs
-      run: python scripts/validate_jsonl.py --schema contracts/EvalLogContract_v1.1.1.schema.json --file codex/v1.1.1/EVAL_LOG_*.jsonl
-    - name: Validate SCAR Evidence
-      run: python scripts/validate_jsonl.py --schema contracts/SCAR_Evidence_v1.1.1.schema.json --file codex/v1.1.1/SCAR_EVIDENCE_*.jsonl
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip jsonschema
+      - run: python conformance/conformance_harness.py
