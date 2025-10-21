@@ -1,0 +1,110 @@
+{
+  "version": "1.0.15",
+  "definitions": {
+    "ActionProposal": {
+      "type": "object",
+      "required": [
+        "id",
+        "timestamp",
+        "domain",
+        "context",
+        "intended_effects"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "context": {
+          "type": "object"
+        },
+        "intended_effects": {
+          "type": "string"
+        }
+      }
+    },
+    "DecisionReport": {
+      "type": "object",
+      "required": [
+        "proposal_id",
+        "decision",
+        "rationale_lay",
+        "metrics",
+        "evidence"
+      ],
+      "properties": {
+        "proposal_id": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "PERMIT",
+            "ABSTAIN",
+            "BLOCK"
+          ]
+        },
+        "rationale_lay": {
+          "type": "string",
+          "maxLength": 850
+        },
+        "metrics": {
+          "type": "object"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceObject"
+          }
+        }
+      }
+    },
+    "EvidenceObject": {
+      "type": "object",
+      "required": [
+        "description",
+        "filename",
+        "sha256"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    },
+    "TelemetryRecord": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "window",
+        "metrics"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "string"
+        },
+        "window": {
+          "type": "string",
+          "enum": [
+            "7d",
+            "30d"
+          ]
+        },
+        "metrics": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

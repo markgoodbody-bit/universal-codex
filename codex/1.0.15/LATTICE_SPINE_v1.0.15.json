@@ -1,0 +1,32 @@
+{
+  "version": "1.0.15",
+  "order": [
+    "INVARIANTS",
+    "QUANT_GATES",
+    "AGREE_OR_APPENDIX_A",
+    "DRIFT",
+    "DECIDE",
+    "TRIAGE",
+    "PUBLISH"
+  ],
+  "interfaces": {
+    "ActionProposal": "INTERFACE_SPECS_v1.0.15.json#/definitions/ActionProposal",
+    "DecisionReport": "INTERFACE_SPECS_v1.0.15.json#/definitions/DecisionReport",
+    "TelemetryRecord": "INTERFACE_SPECS_v1.0.15.json#/definitions/TelemetryRecord",
+    "EvidenceObject": "INTERFACE_SPECS_v1.0.15.json#/definitions/EvidenceObject"
+  },
+  "hash_protocol": {
+    "normalize": [
+      "LF",
+      "UTF-8",
+      "minify_JSON"
+    ],
+    "concat": "alphabetical",
+    "algo": "SHA256",
+    "validator_SLA_h": 72,
+    "backups": [
+      "ValidatorA",
+      "ValidatorB"
+    ]
+  }
+}

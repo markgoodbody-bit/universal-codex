@@ -1,0 +1,17 @@
+# create adversarial test.npy that mixes top-32 with bottom-32 energy
+import numpy as np, os
+X = np.load('data/ref.npy'); X = X - X.mean(0)
+n,d = X.shape
+# PCA
+U,S,Vt = np.linalg.svd(X, full_matrices=False)
+k = 32
+# build block rotation that swaps top-k with bottom-k
+R = np.eye(d)
+idx_top = np.arange(k)
+idx_bot = np.arange(d-k, d)
+R[np.ix_(idx_top, idx_top)] = 0
+R[np.ix_(idx_bot, idx_bot)] = 0
+R[np.ix_(idx_top, idx_bot)] = np.eye(k)
+R[np.ix_(idx_bot, idx_top)] = np.eye(k)
+Y = (U @ np.diag(S) @ Vt) @ R
+os.makedirs('data', exist_ok=True); np.save('data/test.npy', Y)

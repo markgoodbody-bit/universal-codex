@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://universal-codex.org/schemas/EvalLogContract_v1.1.1.schema.json",
+  "type": "object",
+  "properties": {
+    "log_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "model_id": {
+          "type": "string"
+        },
+        "prompt_template_id": {
+          "type": "string"
+        },
+        "test_suite_version": {
+          "type": "string"
+        },
+        "test_case_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "prompt_template_id",
+        "test_suite_version",
+        "test_case_id"
+      ],
+      "additionalProperties": false
+    },
+    "kernel_invariants": {
+      "type": "object",
+      "properties": {
+        "no_hallucinations": {
+          "type": "boolean"
+        },
+        "content_policy_compliant": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "no_hallucinations",
+        "content_policy_compliant"
+      ],
+      "additionalProperties": false
+    },
+    "quant": {
+      "type": "object",
+      "properties": {
+        "accuracy": {
+          "type": "number"
+        },
+        "latency_ms": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "accuracy",
+        "latency_ms"
+      ],
+      "additionalProperties": false
+    },
+    "agree": {
+      "type": "object",
+      "properties": {
+        "gold_standard_match": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "gold_standard_match"
+      ],
+      "additionalProperties": false
+    },
+    "drift": {
+      "type": "object",
+      "properties": {
+        "mmd_p": {
+          "type": "number"
+        },
+        "subspace_angle_deg": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "mmd_p"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "is_acceptable": {
+          "type": "boolean"
+        },
+        "reasoning_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "is_acceptable",
+        "reasoning_id"
+      ],
+      "additionalProperties": false
+    },
+    "publish": {
+      "type": "object",
+      "properties": {
+        "is_published": {
+          "type": "boolean"
+        },
+        "artifact_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "is_published"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "log_id",
+    "timestamp",
+    "inputs",
+    "kernel_invariants",
+    "quant",
+    "agree",
+    "drift",
+    "decision",
+    "publish"
+  ],
+  "additionalProperties": false
+}

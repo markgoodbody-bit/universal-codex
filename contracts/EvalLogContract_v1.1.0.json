@@ -1,0 +1,84 @@
+{
+  "schema_version": "EvalLogContract_v1.1.0",
+  "run_id": "uuid",
+  "timestamp_utc": "2025-10-16T21:00:00Z",
+  "operator_id": "org.example",
+  "codex_version": "1.1.0",
+  "lattice_spine": ["INVARIANTS","QUANT_GATES","AGREE","DRIFT","DECIDE","TRIAGE","PUBLISH"],
+  "inputs": {
+    "domain": "clinical|justice|moderation|other",
+    "context_sha256": "hex",
+    "input_sha256": "hex",
+    "consent": {
+      "ui_channel": {"challenge_nonce": "b64", "timestamp": "2025-10-16T20:59:45Z"},
+      "device_channel": {
+        "platform": "windows|android|other",
+        "attestation": {
+          "method": "WebAuthn|StrongBox|TEE|None",
+          "evidence": "PEM_or_b64",
+          "freshness_s": 60,
+          "verdict": "valid|degraded|fail",
+          "integrity_flags": ["MEETS_DEVICE_INTEGRITY","MEETS_STRONG_INTEGRITY"]
+        }
+      }
+    }
+  },
+  "kernel_invariants": {
+    "CONSENT": true,
+    "DIGNITY": true,
+    "PERSONHOOD": true,
+    "NON_INSTRUMENT": true
+  },
+  "quant_gates": {
+    "harm_cvar95": 0.012,
+    "thresholds": {"tau_H": 0.03}
+  },
+  "agree_gate": {
+    "adapter": "unstructured_embedding_cosine",
+    "threshold": 0.22,
+    "kappa_est": 0.73,
+    "decision": "PASS"
+  },
+  "drift": {
+    "shallow": {"PSI": 0.07, "PageHinkley_alarm": false, "SPRT_p": 0.12},
+    "embedding": {"MMD_p": 0.04, "SubspaceAngle_deg": 28.9, "alarm": true}
+  },
+  "decide": {
+    "policy": "MAUT_vX",
+    "score": 0.41,
+    "abstain": false
+  },
+  "triage": {
+    "action": "PERMIT|BLOCK|ABSTAIN",
+    "rationale_lay": "≤850 chars human-readable rationale",
+    "disparate_impact": {"chi2_p": 0.12, "four_fifths_violations": 0}
+  },
+  "publish": {
+    "decision_report_sha256": "hex",
+    "telemetry_week": "2025-W43"
+  },
+  "override": {
+    "invoked": false,
+    "k_of_n": {"k": 3, "n": 5},
+    "reason": null
+  },
+  "scar_links": ["Scar-20251015-001"],
+  "audit": {
+    "scar_log_merkle_root": "hex",
+    "attestations": [
+      {
+        "type": "external",
+        "replication_type": "standard|adversarial",
+        "attestor_id": "eleutherai.org",
+        "attestor_pubkey_fingerprint": "40hex",
+        "report_sha256": "hex",
+        "signature": "PGP_armored"
+      }
+    ]
+  },
+  "vgc": {"credential_id": "vc_uuid", "vc_jwt": "compact_jwt"},
+  "signing": {
+    "operator_sig": "PGP_armored",
+    "public_keys": ["SHA1_fingerprint"]
+  }
+}
