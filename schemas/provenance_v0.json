@@ -1,0 +1,227 @@
+{
+  "$id": "https://example.org/schema/provenance_v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Provable Lineage & Overlap Assessment",
+  "type": "object",
+  "properties": {
+    "corpora": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/corpus"
+      },
+      "minItems": 1
+    },
+    "pipelines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pipeline"
+      },
+      "minItems": 1
+    },
+    "lineage": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lineage_link"
+      }
+    },
+    "overlap_assessment": {
+      "type": "object",
+      "properties": {
+        "methodology": {
+          "type": "string",
+          "minLength": 1
+        },
+        "window_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pairwise": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair_overlap"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "methodology",
+        "pairwise"
+      ]
+    }
+  },
+  "required": [
+    "corpora",
+    "pipelines",
+    "lineage",
+    "overlap_assessment"
+  ],
+  "$defs": {
+    "sig": {
+      "type": "object",
+      "properties": {
+        "algo": {
+          "type": "string",
+          "enum": [
+            "ed25519",
+            "p256",
+            "rsa-pss"
+          ]
+        },
+        "value": {
+          "type": "string"
+        },
+        "signed_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "algo",
+        "value",
+        "signed_by",
+        "signed_at"
+      ]
+    },
+    "corpus": {
+      "type": "object",
+      "properties": {
+        "corpus_id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "hash_root": {
+          "type": "string"
+        },
+        "manifest_uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "provenance_sig": {
+          "$ref": "#/$defs/sig"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "version",
+        "hash_root",
+        "provenance_sig"
+      ]
+    },
+    "pipeline": {
+      "type": "object",
+      "properties": {
+        "pipeline_id": {
+          "type": "string"
+        },
+        "owner_org": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "checkpoint_hash": {
+          "type": "string"
+        },
+        "provenance_sig": {
+          "$ref": "#/$defs/sig"
+        }
+      },
+      "required": [
+        "pipeline_id",
+        "owner_org",
+        "checkpoint_hash",
+        "provenance_sig"
+      ]
+    },
+    "lineage_link": {
+      "type": "object",
+      "properties": {
+        "pipeline_id": {
+          "type": "string"
+        },
+        "corpus_id": {
+          "type": "string"
+        },
+        "contribution": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "pipeline_id",
+        "corpus_id"
+      ]
+    },
+    "pair_overlap": {
+      "type": "object",
+      "properties": {
+        "pipeline_a": {
+          "type": "string"
+        },
+        "pipeline_b": {
+          "type": "string"
+        },
+        "metric": {
+          "type": "string",
+          "enum": [
+            "jaccard_doc",
+            "jaccard_token",
+            "cosine_embed",
+            "hash_overlap"
+          ]
+        },
+        "overlap_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2.0
+        },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 1000
+        },
+        "p_value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.05
+        },
+        "auditor_org": {
+          "type": "string"
+        },
+        "audit_report_uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "auditor_sig": {
+          "$ref": "#/$defs/sig"
+        }
+      },
+      "required": [
+        "pipeline_a",
+        "pipeline_b",
+        "metric",
+        "overlap_pct",
+        "auditor_sig"
+      ]
+    }
+  }
+}
