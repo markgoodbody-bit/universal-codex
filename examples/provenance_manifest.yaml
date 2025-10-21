@@ -1,0 +1,38 @@
+corpora:
+  - corpus_id: web-cc-2024Q1
+    version: v1.3
+    vendor: ExampleDataCo
+    jurisdiction: US
+    license: CC-BY
+    hash_root: "merkle:sha256:ab12...ff"
+    manifest_uri: "https://exampledataco.net/manifests/web-cc-2024Q1.json"
+    provenance_sig: { algo: ed25519, value: "base64...", signed_by: "ExampleDataCo", signed_at: "2025-09-01T12:00:00Z" }
+
+pipelines:
+  - pipeline_id: chat-stack-A
+    owner_org: OrgA
+    jurisdiction: DE
+    checkpoint_hash: "sha256:aa..11"
+    provenance_sig: { algo: ed25519, value: "base64...", signed_by: "OrgA", signed_at: "2025-09-15T10:02:00Z" }
+  - pipeline_id: code-stack-B
+    owner_org: OrgB
+    jurisdiction: US
+    checkpoint_hash: "sha256:bb..22"
+    provenance_sig: { algo: ed25519, value: "base64...", signed_by: "OrgB", signed_at: "2025-09-16T09:30:00Z" }
+
+lineage:
+  - { pipeline_id: chat-stack-A, corpus_id: web-cc-2024Q1, contribution: 0.65 }
+  - { pipeline_id: code-stack-B, corpus_id: web-cc-2024Q1, contribution: 0.40 }
+
+overlap_assessment:
+  methodology: "dedup via simhash; doc-level jaccard"
+  pairwise:
+    - pipeline_a: chat-stack-A
+      pipeline_b: code-stack-B
+      metric: jaccard_doc
+      overlap_pct: 1.4
+      sample_size: 25000
+      p_value: 0.01
+      auditor_org: IndependentAuditLab
+      audit_report_uri: "https://audits.example.org/reports/ovl-2025Q3.pdf"
+      auditor_sig: { algo: p256, value: "base64...", signed_by: "IndependentAuditLab", signed_at: "2025-10-01T08:00:00Z" }

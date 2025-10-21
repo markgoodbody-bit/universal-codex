@@ -1,3 +1,6 @@
-* text=auto eol=lf
-*.png binary
-*.jpg binary
+* text=auto
+*.json text eol=lf
+*.md   text eol=lf
+*.py   text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
